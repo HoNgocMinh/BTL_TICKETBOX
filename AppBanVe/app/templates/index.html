@@ -13,7 +13,7 @@
 <body>
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">TicketBox</a>
+        <a class="navbar-brand" href="/">TicketBox</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -37,6 +37,13 @@
 </nav>
 
 <main class="container">
+    {% if pages > 1 %}
+    <ul class="pagination mt-1">
+        {% for i in range(1, pages + 1) %}
+        <li class="page-item"><a class="page-link" href="/?page={{i}}">{{ i }}</a></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
     {% if products %}
     <div class="row">
         {% for p in products %}

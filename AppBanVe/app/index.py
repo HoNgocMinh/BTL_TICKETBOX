@@ -1,3 +1,5 @@
+import math
+
 from flask import render_template, request
 
 import dao
@@ -10,9 +12,12 @@ def index():
 
     cate_id = request.args.get('category_id')
     kw = request.args.get('kw')
-    prods = dao.load_products(cate_id=cate_id, kw=kw)
+    page = request.args.get('page', 1)
+    prods = dao.load_products(cate_id=cate_id, kw=kw, page=int(page))
 
-    return render_template('index.html', categories=cates, products=prods)
+    page_size = app.config.get("PAGE_SIZE", 8)
+    total =dao.count_products()
+    return render_template('index.html', categories=cates, products=prods, pages=math.ceil(total/page_size))
 
 
 if __name__ == '__main__':
