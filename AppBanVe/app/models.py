@@ -1,9 +1,23 @@
-from itertools import product
-
-from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey, false
+from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey, Enum
 from sqlalchemy.orm import relationship
-
 from app import db, app
+from enum import Enum as RoleEnum
+from flask_login import UserMixin
+
+
+class UserRole(RoleEnum):
+    ADMIN = 1
+    ORGANIZER = 2
+    USER = 3
+
+
+class User(db.Model, UserMixin):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(50), nullable=False)
+    username = Column(String(50), nullable=False, unique=True)
+    password = Column(String(50), nullable=False)
+    avatar = Column(String(500), default='https://cdn.tienphong.vn/images/a6bf4f60924201126af6849ca45a39804ea063b1ca2743120ebbd3b897dd07f50f478ca4b5a866f499a417fe733ce7396593636e1df77de4bbaf7a780e1ca66f5d6241f9b42334e6e06c1be9adec76eb/e8e30fb8129eafc0f68f-7442-703.jpg')
+    userrole = Column(Enum(UserRole), default=UserRole.USER)
 
 
 class Category(db.Model):
@@ -26,6 +40,13 @@ class Product(db.Model):
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
+
+        # import hashlib
+        # u = User(name='admin', username='admin', password=hashlib.md5('123456'.encode('utf-8')).hexdigest(), userrole = UserRole.ADMIN)
+        #
+        # db.session.add(u)
+        # db.session.commit()
+
 
         # c1 = Category(name='Music Festival')
         # c2 = Category(name='Concert')
